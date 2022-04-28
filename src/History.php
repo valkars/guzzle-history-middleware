@@ -16,18 +16,18 @@ use Psr\Http\Message\RequestInterface;
 
 class History extends \SplObjectStorage
 {
-    public function mergeInfo(RequestInterface $request, array $info)
+    public function mergeInfo(RequestInterface $request, array $info): void
     {
-        $info = array_merge(
+        $info = \array_merge(
             ['response' => null, 'error' => null, 'info' => null],
-            array_filter($this->contains($request) ? $this[$request] : []),
-            array_filter($info)
+            \array_filter($this->contains($request) ? $this[$request] : []),
+            \array_filter($info)
         );
 
         $this->attach($request, $info);
     }
 
-    public function addStats(TransferStats $stats)
+    public function addStats(TransferStats $stats): void
     {
         $this->mergeInfo($stats->getRequest(), ['info' => $stats->getHandlerStats()]);
     }

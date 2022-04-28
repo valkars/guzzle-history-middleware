@@ -17,14 +17,15 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 
-class HistoryMiddlewareTest extends \PHPUnit_Framework_TestCase
+class HistoryMiddlewareTest extends TestCase
 {
-    public function testMiddleware()
+    public function testMiddleware(): void
     {
         $response = new Response(204);
-        $mocks = array_fill(0, 2, $response);
+        $mocks = \array_fill(0, 2, $response);
         $mock = new MockHandler($mocks);
         $handler = HandlerStack::create($mock);
 
@@ -47,10 +48,10 @@ class HistoryMiddlewareTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('error', $res);
     }
 
-    public function testHistoryShouldHaveOneEntryIfRequestChangesBeforeEntryInMiddleware()
+    public function testHistoryShouldHaveOneEntryIfRequestChangesBeforeEntryInMiddleware(): void
     {
         $response = new Response(204);
-        $mocks = array_fill(0, 2, $response);
+        $mocks = \array_fill(0, 2, $response);
         $mock = new MockHandler($mocks);
         $handler = HandlerStack::create($mock);
 
@@ -58,7 +59,7 @@ class HistoryMiddlewareTest extends \PHPUnit_Framework_TestCase
 
         $handler->push(function (callable $handler) {
             return function (RequestInterface $request, array $options) use ($handler) {
-                $request = $request->withAddedHeader('x-time', time());
+                $request = $request->withAddedHeader('x-time', \time());
 
                 return $handler($request, $options);
             };
@@ -71,10 +72,10 @@ class HistoryMiddlewareTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $storage);
     }
 
-    public function testHistoryShouldHaveTwoEntriesIfRequestChangesAfterEntryInMiddleware()
+    public function testHistoryShouldHaveTwoEntriesIfRequestChangesAfterEntryInMiddleware(): void
     {
         $response = new Response(204);
-        $mocks = array_fill(0, 2, $response);
+        $mocks = \array_fill(0, 2, $response);
         $mock = new MockHandler($mocks);
         $handler = HandlerStack::create($mock);
 
@@ -83,7 +84,7 @@ class HistoryMiddlewareTest extends \PHPUnit_Framework_TestCase
         $handler->push(new HistoryMiddleware($storage));
         $handler->push(function (callable $handler) {
             return function (RequestInterface $request, array $options) use ($handler) {
-                $request = $request->withAddedHeader('x-time', time());
+                $request = $request->withAddedHeader('x-time', \time());
 
                 return $handler($request, $options);
             };

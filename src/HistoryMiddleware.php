@@ -21,14 +21,11 @@ use Psr\Http\Message\RequestInterface;
  */
 class HistoryMiddleware
 {
-    private $container;
-
-    public function __construct(History $container)
+    public function __construct(private readonly History $container)
     {
-        $this->container = $container;
     }
 
-    public function __invoke(callable $handler)
+    public function __invoke(callable $handler): \Closure
     {
         return function (RequestInterface $request, array $options) use ($handler) {
             return $handler($request, $options)->then(
